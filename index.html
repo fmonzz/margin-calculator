@@ -4,193 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trading Calculator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
         }
-        .container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
+        .calculator-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .calculator {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            width: 400px;
+        .input-style {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
         }
-        .title {
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            color: #333;
+        .input-style:focus {
+            border-color: #60a5fa;
+            outline: none;
         }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .result-group {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+        .input-style::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
         .result-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
+            transition: all 0.3s ease;
         }
-        .result-label {
-            font-weight: bold;
-            color: #333;
-        }
-        .result-value {
-            color: #0066cc;
+        .result-row:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- 1 TP Calculator -->
-        <div class="calculator">
-            <div class="title">1 TP Calculator</div>
-            <div class="input-group">
-                <label>Entry Price:</label>
-                <input type="number" id="entry1" value="100" step="0.00000001">
+<body class="gradient-bg min-h-screen text-gray-100 py-12 px-4">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-400">Trading Calculator</h1>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- 1 TP Calculator -->
+            <div class="calculator-card rounded-xl p-6 space-y-4">
+                <h2 class="text-xl font-semibold text-center text-blue-300 mb-6">1 TP Calculator</h2>
+                <div class="space-y-4">
+                    <div class="flex flex-col">
+                        <label class="text-sm text-gray-300 mb-1">Entry Price</label>
+                        <input type="number" id="entry1" placeholder="Enter price" step="0.00000001" class="input-style rounded-lg p-2" oninput="calculate()">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-sm text-gray-300 mb-1">TP1</label>
+                        <input type="number" id="tp1" placeholder="Enter TP1" step="0.00000001" class="input-style rounded-lg p-2" oninput="calculate()">
+                    </div>
+                </div>
+                <div class="mt-6 space-y-2">
+                    <div class="result-row flex justify-between p-2 rounded">
+                        <span class="text-gray-300">TP1%</span>
+                        <span id="tp1Percent" class="font-mono">-</span>
+                    </div>
+                    <div class="result-row flex justify-between p-2 rounded">
+                        <span class="text-gray-300">Margin %</span>
+                        <span id="margin1" class="font-mono">-</span>
+                    </div>
+                    <div class="result-row flex justify-between p-2 rounded">
+                        <span class="text-gray-300">Margin Points</span>
+                        <span id="marginPoints1" class="font-mono">-</span>
+                    </div>
+                    <div class="result-row flex justify-between p-2 rounded bg-blue-900 bg-opacity-20">
+                        <span class="text-gray-300">New Level</span>
+                        <span id="newLevel1" class="font-mono">-</span>
+                    </div>
+                </div>
             </div>
-            <div class="input-group">
-                <label>TP1:</label>
-                <input type="number" id="tp1" value="110" step="0.00000001">
-            </div>
-            <div class="result-group">
-                <div class="result-row">
-                    <span class="result-label">TP1%:</span>
-                    <span class="result-value" id="tp1Percent">0</span>
-                </div>
-                <div class="result-row">
-                    <span class="result-label">Margin %:</span>
-                    <span class="result-value" id="margin1Percent">0</span>
-                </div>
-                <div class="result-row">
-                    <span class="result-label">Margin points:</span>
-                    <span class="result-value" id="marginPoints1">0</span>
-                </div>
-                <div class="result-row">
-                    <span class="result-label">New level:</span>
-                    <span class="result-value" id="newLevel1">0</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- 2 TP Calculator -->
-        <div class="calculator">
-            <div class="title">2 TP Calculator</div>
-            <div class="input-group">
-                <label>Entry Price:</label>
-                <input type="number" id="entry2" value="100" step="0.00000001">
-            </div>
-            <div class="input-group">
-                <label>TP1:</label>
-                <input type="number" id="tp1_2" value="110" step="0.00000001">
-            </div>
-            <div class="input-group">
-                <label>TP2:</label>
-                <input type="number" id="tp2" value="120" step="0.00000001">
-            </div>
-            <div class="result-group">
-                <div class="result-row">
-                    <span class="result-label">TP1%:</span>
-                    <span class="result-value" id="tp1Percent2">0</span>
+            <!-- 2 TP Calculator -->
+            <div class="calculator-card rounded-xl p-6 space-y-4">
+                <h2 class="text-xl font-semibold text-center text-blue-300 mb-6">2 TP Calculator</h2>
+                <div class="space-y-4">
+                    <div class="flex flex-col">
+                        <label class="text-sm text-gray-300 mb-1">Entry Price</label>
+                        <input type="number" id="entry2" placeholder="Enter price" step="0.00000001" class="input-style rounded-lg p-2" oninput="calculate()">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-sm text-gray-300 mb-1">TP1</label>
+                        <input type="number" id="tp1_2" placeholder="Enter TP1" step="0.00000001" class="input-style rounded-lg p-2" oninput="calculate()">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-sm text-gray-300 mb-1">TP2</label>
+                        <input type="number" id="tp2" placeholder="Enter TP2" step="0.00000001" class="input-style rounded-lg p-2" oninput="calculate()">
+                    </div>
                 </div>
-                <div class="result-row">
-                    <span class="result-label">TP2%:</span>
-                    <span class="result-value" id="tp2Percent">0</span>
-                </div>
-                <div class="result-row">
-                    <span class="result-label">Margin %:</span>
-                    <span class="result-value" id="margin2Percent">0</span>
-                </div>
-                <div class="result-row">
-                    <span class="result-label">Margin points:</span>
-                    <span class="result-value" id="marginPoints2">0</span>
-                </div>
-                <div class="result-row">
-                    <span class="result-label">New level:</span>
-                    <span class="result-value" id="newLevel2">0</span>
+                <div class="mt-6 space-y-2">
+                    <div class="result-row flex justify-between p-2 rounded">
+                        <span class="text-gray-300">TP1%</span>
+                        <span id="tp1Percent2" class="font-mono">-</span>
+                    </div>
+                    <div class="result-row flex justify-between p-2 rounded">
+                        <span class="text-gray-300">TP2%</span>
+                        <span id="tp2Percent" class="font-mono">-</span>
+                    </div>
+                    <div class="result-row flex justify-between p-2 rounded">
+                        <span class="text-gray-300">Margin %</span>
+                        <span id="margin2" class="font-mono">-</span>
+                    </div>
+                    <div class="result-row flex justify-between p-2 rounded">
+                        <span class="text-gray-300">Margin Points</span>
+                        <span id="marginPoints2" class="font-mono">-</span>
+                    </div>
+                    <div class="result-row flex justify-between p-2 rounded bg-blue-900 bg-opacity-20">
+                        <span class="text-gray-300">New Level</span>
+                        <span id="newLevel2" class="font-mono">-</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Format number to 8 decimal places
         function formatNumber(num) {
-            return Number(num).toFixed(8);
+            return isNaN(num) ? '-' : Number(num).toFixed(8);
         }
 
-        // Calculate values for 1 TP
-        function calculate1TP() {
-            const entry = Number(document.getElementById('entry1').value);
-            const tp1 = Number(document.getElementById('tp1').value);
+        function calculate() {
+            // Get input values
+            const entry1 = parseFloat(document.getElementById('entry1').value || 0);
+            const tp1 = parseFloat(document.getElementById('tp1').value || 0);
+            const entry2 = parseFloat(document.getElementById('entry2').value || 0);
+            const tp1_2 = parseFloat(document.getElementById('tp1_2').value || 0);
+            const tp2 = parseFloat(document.getElementById('tp2').value || 0);
 
-            const tp1Percent = ((tp1 - entry) / entry) * 100;
-            const margin1Percent = tp1Percent / 10;
-            const marginFactor = margin1Percent >= 2 ? 2 : margin1Percent;
-            const marginPoints = entry * marginFactor / 100;
-            const newLevel = entry + marginPoints;
+            // 1 TP Calculations
+            let tp1Percent = ((tp1 - entry1) / entry1) * 100;
+            let margin1Percent = tp1Percent / 10;
+            let marginCalc1 = margin1Percent >= 2 ? 2 : margin1Percent;
+            let marginPoints1 = entry1 * marginCalc1 / 100;
+            let newLevel1 = entry1 + marginPoints1;
 
-            document.getElementById('tp1Percent').textContent = formatNumber(tp1Percent);
-            document.getElementById('margin1Percent').textContent = formatNumber(margin1Percent);
-            document.getElementById('marginPoints1').textContent = formatNumber(marginPoints);
-            document.getElementById('newLevel1').textContent = formatNumber(newLevel);
+            // 2 TP Calculations
+            let tp1Percent2 = ((tp1_2 - entry2) / entry2) * 100;
+            let tp2Percent = ((tp2 - entry2) / entry2) * 100;
+            let margin2Percent = (tp1Percent2 + tp2Percent) / 20;
+            let marginCalc2 = margin2Percent >= 2 ? 2 : margin2Percent;
+            let marginPoints2 = entry2 * marginCalc2 / 100;
+            let newLevel2 = entry2 + marginPoints2;
+
+            // Only show results if there are valid inputs
+            const hasInputs1 = entry1 && tp1;
+            const hasInputs2 = entry2 && tp1_2 && tp2;
+
+            // Update display for 1 TP
+            document.getElementById('tp1Percent').textContent = hasInputs1 ? formatNumber(tp1Percent) : '-';
+            document.getElementById('margin1').textContent = hasInputs1 ? formatNumber(margin1Percent) : '-';
+            document.getElementById('marginPoints1').textContent = hasInputs1 ? formatNumber(marginPoints1) : '-';
+            document.getElementById('newLevel1').textContent = hasInputs1 ? formatNumber(newLevel1) : '-';
+
+            // Update display for 2 TP
+            document.getElementById('tp1Percent2').textContent = hasInputs2 ? formatNumber(tp1Percent2) : '-';
+            document.getElementById('tp2Percent').textContent = hasInputs2 ? formatNumber(tp2Percent) : '-';
+            document.getElementById('margin2').textContent = hasInputs2 ? formatNumber(margin2Percent) : '-';
+            document.getElementById('marginPoints2').textContent = hasInputs2 ? formatNumber(marginPoints2) : '-';
+            document.getElementById('newLevel2').textContent = hasInputs2 ? formatNumber(newLevel2) : '-';
         }
-
-        // Calculate values for 2 TP
-        function calculate2TP() {
-            const entry = Number(document.getElementById('entry2').value);
-            const tp1 = Number(document.getElementById('tp1_2').value);
-            const tp2 = Number(document.getElementById('tp2').value);
-
-            const tp1Percent = ((tp1 - entry) / entry) * 100;
-            const tp2Percent = ((tp2 - entry) / entry) * 100;
-            const margin2Percent = (tp1Percent + tp2Percent) / 20;
-            const marginFactor = margin2Percent >= 2 ? 2 : margin2Percent;
-            const marginPoints = entry * marginFactor / 100;
-            const newLevel = entry + marginPoints;
-
-            document.getElementById('tp1Percent2').textContent = formatNumber(tp1Percent);
-            document.getElementById('tp2Percent').textContent = formatNumber(tp2Percent);
-            document.getElementById('margin2Percent').textContent = formatNumber(margin2Percent);
-            document.getElementById('marginPoints2').textContent = formatNumber(marginPoints);
-            document.getElementById('newLevel2').textContent = formatNumber(newLevel);
-        }
-
-        // Add event listeners to inputs
-        document.getElementById('entry1').addEventListener('input', calculate1TP);
-        document.getElementById('tp1').addEventListener('input', calculate1TP);
-        
-        document.getElementById('entry2').addEventListener('input', calculate2TP);
-        document.getElementById('tp1_2').addEventListener('input', calculate2TP);
-        document.getElementById('tp2').addEventListener('input', calculate2TP);
-
-        // Initial calculations
-        calculate1TP();
-        calculate2TP();
     </script>
 </body>
 </html>
