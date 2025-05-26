@@ -25,8 +25,9 @@ jobs:
         run: npm run build  # Cambia con il tuo comando build
 
       - name: Upload artifact (per GitHub Pages o altro deploy)
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
+          name: github-pages
           path: ./dist  # o ./build, dipende dal tuo progetto
 
   deploy:
